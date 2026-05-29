@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Next.js
+dashboard/node_modules/
+dashboard/.next/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
