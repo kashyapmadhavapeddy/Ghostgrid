@@ -35,3 +35,16 @@ class TrustSnapshot(Base):
     score = Column(Float)
 
     timestamp = Column(String)
+
+class AgentTrace(Base):
+    __tablename__ = "agent_traces"
+
+    id = Column(Integer, primary_key=True)
+
+    agent_id = Column(Integer)
+
+    step_type = Column(String)
+
+    content = Column(String)
+
+    timestamp = Column(String)

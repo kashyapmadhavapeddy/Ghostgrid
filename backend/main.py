@@ -307,3 +307,55 @@ def get_recent_incidents():
         }
         for event in events
     ]
+@app.delete("/agents/{agent_id}")
+def delete_agent(agent_id: int):
+
+    db = SessionLocal()
+
+    agent = (
+        db.query(Agent)
+        .filter(Agent.id == agent_id)
+        .first()
+    )
+
+    if not agent:
+        return {
+            "error": "Agent not found"
+        }
+
+    db.query(TrustEvent).filter(
+        TrustEvent.agent_id == agent_id
+    ).delete()
+
+    db.query(TrustSnapshot).filter(
+        TrustSnapshot.agent_id == agent_id
+    ).delete()
+
+    db.delete(agent)
+
+    db.commit()
+
+    return {
+        "message":
+        f"Agent {agent_id} deleted"
+    }
+
+@app.post("/traces/log")
+def log_trace(trace: dict):
+
+    db = SessionLocal()
+
+    trace_record = AgentTrace(
+        agent_id=trace["agent_id"],
+        step_type=trace["step_type"],
+        content=trace["content"],
+        timestamp=str(datetime.utcnow())
+    )
+
+    db.add(trace_record)
+
+    db.commit()
+
+    return {
+        "message": "Trace logged"
+    }
